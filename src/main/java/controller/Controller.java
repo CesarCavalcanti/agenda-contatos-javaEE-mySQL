@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -9,10 +10,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import model.DAO;
 import model.Contato;
 
-@WebServlet(urlPatterns = {"/Controller","/main", "/insert","/select","/update","/delete"})
+@WebServlet(urlPatterns = {"/Controller","/main", "/insert","/select","/update","/delete","/report"})
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        DAO dao = new DAO();
@@ -38,6 +46,8 @@ public class Controller extends HttpServlet {
 			editarContato(request,response);
 		} else if(action.equals("/delete")) {
 			deletarContato(request,response);
+		} else if(action.equals("/report")) {
+			gerarPdf(request,response);
 		}else{
 			response.sendRedirect("index.html");
 		}
@@ -87,6 +97,46 @@ public class Controller extends HttpServlet {
 			throws ServletException, IOException {
 		dao.delete(request.getParameter("idcon"));
 		response.sendRedirect("main");
+	}
+	
+	protected void gerarPdf(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Document documento = new Document ();
+		try {
+			//tipo de conteúdo
+			response.setContentType("application/pdf");
+			//Nome do documento
+			response.addHeader("Content-Disposition", "inline; filename="+"contatos.pdf");
+			//criar documento
+			PdfWriter.getInstance(documento,response.getOutputStream());
+			//abrir documento -> conteúdo
+			documento.open();
+			documento.add(new Paragraph("Lista de contatos:"));
+			documento.add(new Paragraph(" "));
+			//Criar uma tabela
+			PdfPTable tabela = new PdfPTable(3);
+			//Cabecalho
+			PdfPCell col1 = new PdfPCell(new Paragraph("Nome"));
+			PdfPCell col2 = new PdfPCell(new Paragraph("Email"));
+			PdfPCell col3 = new PdfPCell(new Paragraph("Fone"));
+			tabela.addCell(col1);
+			tabela.addCell(col2);
+			tabela.addCell(col3);
+			//Popular a tabela
+			List<Contato> list = dao.findAll();
+			for(int i = 0; i < list.size();i++) {
+				tabela.addCell(list.get(i).getNome());
+				tabela.addCell(list.get(i).getEmail());
+				tabela.addCell(list.get(i).getFone());
+				
+			}
+			documento.add(tabela);
+			documento.close();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			documento.close();
+		}
 	}
 
 }
