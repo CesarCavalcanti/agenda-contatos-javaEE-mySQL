@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.DAO;
 import model.Contato;
 
-@WebServlet(urlPatterns = {"/Controller","/main", "/insert","/select","/update"})
+@WebServlet(urlPatterns = {"/Controller","/main", "/insert","/select","/update","/delete"})
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        DAO dao = new DAO();
@@ -36,6 +36,8 @@ public class Controller extends HttpServlet {
 			selecionarContato(request,response);
 		} else if(action.equals("/update")) {
 			editarContato(request,response);
+		} else if(action.equals("/delete")) {
+			deletarContato(request,response);
 		}else{
 			response.sendRedirect("index.html");
 		}
@@ -78,6 +80,12 @@ public class Controller extends HttpServlet {
 		contato.setFone(request.getParameter("fone"));
 		contato.setIdcon(request.getParameter("idcon"));
 		dao.update(contato);
+		response.sendRedirect("main");
+	}
+	
+	protected void deletarContato(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		dao.delete(request.getParameter("idcon"));
 		response.sendRedirect("main");
 	}
 

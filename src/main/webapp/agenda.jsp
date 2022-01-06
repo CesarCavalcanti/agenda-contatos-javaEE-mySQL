@@ -38,13 +38,15 @@
 				<td><%=contatosLista.get(i).getEmail()%></td>
 				<td><%=contatosLista.get(i).getFone()%></td>
 				<td><a href="select?idcon=<%=contatosLista.get(i).getIdcon()%>"
-					class="Botao1" value="editar">Editar</a></td>
+					class="Botao1" value="editar">Editar</a> <a
+					href="javascript: confirmar(<%=contatosLista.get(i).getIdcon()%>)"
+					class="Botao2" value="excluir">Excluir</a></td>
 			</tr>
 			<%
 			}
 			%>
 		</tbody>
 	</table>
-
+	<script src="scripts/confirmador.js"></script>
 </body>
 </html>
