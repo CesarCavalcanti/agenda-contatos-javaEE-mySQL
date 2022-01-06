@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
+	pageEncoding="utf-8"%>
+<%@ page import="model.Contato"%>
+<%@ page import="java.util.List"%>
 <!DOCTYPE>
 <html html lang="pt-br">
 <head>
@@ -9,9 +11,40 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	
+	<%
+	List<Contato> contatosLista = (List<Contato>) request.getAttribute("contatos");
+	%>
+
 	<h1>Agenda de Contatos</h1>
 	<a href="novo.html" class="Botao1">Novo contato</a>
+
+	<table id="tabela">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nome</th>
+				<th>Email</th>
+				<th>Fone</th>
+				<th>Opções</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%
+			for (int i = 0; i < contatosLista.size(); i++) {
+			%>
+			<tr>
+				<td><%=contatosLista.get(i).getIdcon()%></td>
+				<td><%=contatosLista.get(i).getNome()%></td>
+				<td><%=contatosLista.get(i).getEmail()%></td>
+				<td><%=contatosLista.get(i).getFone()%></td>
+				<td><a href="select?idcon=<%=contatosLista.get(i).getIdcon()%>"
+					class="Botao1" value="editar">Editar</a></td>
+			</tr>
+			<%
+			}
+			%>
+		</tbody>
+	</table>
 
 </body>
 </html>

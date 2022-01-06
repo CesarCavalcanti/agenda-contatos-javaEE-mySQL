@@ -41,6 +41,18 @@ public class Contato {
 	public String getIdcon() {
 		return idcon;
 	}
+
+	
+
+	public void setIdcon(String idcon) {
+		this.idcon = idcon;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Contato [idcon=" + idcon + ", nome=" + nome + ", fone=" + fone + ", email=" + email + "]";
+	}
 	
 	
 	
